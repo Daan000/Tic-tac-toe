@@ -1,7 +1,7 @@
 use std::io;
 use std::io::Write;
 
-use tic_tac_toe::{Tile, Opponent, SimpleOpponent, Game, GameStatus};
+use tic_tac_toe::{Game, GameStatus, Opponent, SimpleOpponent, Tile};
 
 fn main() {
     //gemini bullshit loop
@@ -9,16 +9,21 @@ fn main() {
     let opp = SimpleOpponent;
 
     println!("Welcome to Tic Tac Toe!");
-    println!("You are playing against {}" , opp.get_description());
+    println!("You are playing against {}", opp.get_description());
 
     while matches!(game.status(), GameStatus::Ongoing) {
         game.show_board();
 
-        print!("Player {:?}, make your move (row column): ", game.current_turn());
+        print!(
+            "Player {:?}, make your move (row column): ",
+            game.current_turn()
+        );
         io::stdout().flush().unwrap();
 
         let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("Read of input failed");
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Read of input failed");
 
         let coords: Vec<usize> = input
             .split_whitespace()
@@ -32,15 +37,18 @@ fn main() {
 
         game.make_move(coords[0] * 3 + coords[1]);
 
-        if !matches!(game.status(), GameStatus::Ongoing) {break}
+        if !matches!(game.status(), GameStatus::Ongoing) {
+            break;
+        }
 
         println!("zet van de ai");
-        game.make_move(opp.get_next_move(game.get_board(),game.current_turn()));
-
+        game.make_move(opp.get_next_move(game.get_board(), game.current_turn()));
     }
     game.show_board();
     match game.status() {
-        GameStatus::Ongoing => {panic!("Game is still ongoing but finished the loop")}
+        GameStatus::Ongoing => {
+            panic!("Game is still ongoing but finished the loop")
+        }
         GameStatus::Won(winner) => println!("Player {:?} won!", winner),
         GameStatus::Draw => println!("Draw!"),
     }

@@ -1,24 +1,28 @@
 use std::fmt;
 
-#[derive(Copy, Clone, Debug,PartialEq,Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Tile {
     Empty,
     Circle,
-    Cross
+    Cross,
 }
 pub struct Board {
-    tiles: [Tile; 9]
+    tiles: [Tile; 9],
 }
 impl Board {
     pub fn new() -> Board {
-        Board { tiles: [Tile::Empty; 9] }
+        Board {
+            tiles: [Tile::Empty; 9],
+        }
     }
 
-    pub fn set(&mut self, pos:usize, t:Tile) {
-        if pos > 8 {panic!("pos larger than 8")}
+    pub fn set(&mut self, pos: usize, t: Tile) {
+        if pos > 8 {
+            panic!("pos larger than 8")
+        }
         self.tiles[pos] = t;
     }
-    pub fn check_win(&self,team:Tile)->bool{
+    pub fn check_win(&self, team: Tile) -> bool {
         let board = self.tiles;
         // vertical
         for i in 0..3 {
@@ -43,16 +47,24 @@ impl Board {
 
         false
     }
-    pub fn check_empty_tile(&self, pos:usize) -> bool{
-        if pos > 8{ panic!("pos greater then 8") }
+    pub fn check_empty_tile(&self, pos: usize) -> bool {
+        if pos > 8 {
+            panic!("pos greater then 8")
+        }
         self.tiles[pos] == Tile::Empty
     }
-    pub fn check_full_board(&self) -> bool{
-        self.tiles.iter().all(|t| matches!(t,Tile::Circle) || matches!(t,Tile::Cross))
+    pub fn check_full_board(&self) -> bool {
+        self.tiles
+            .iter()
+            .all(|t| matches!(t, Tile::Circle) || matches!(t, Tile::Cross))
     }
-    pub fn get_board(&self) -> [Tile; 9] {self.tiles}
+    pub fn get_board(&self) -> [Tile; 9] {
+        self.tiles
+    }
 
-    pub fn show(&self){ println!("{:?}",self.tiles)}
+    pub fn show(&self) {
+        println!("{:?}", self.tiles)
+    }
     pub fn print_grid(&self) {
         for (i, cel) in self.tiles.iter().enumerate() {
             print!("{} ", cel);
@@ -73,7 +85,7 @@ impl Tile {
         match self {
             Tile::Circle => Tile::Cross,
             Tile::Cross => Tile::Circle,
-            Tile::Empty => panic!("Empty tile does not have a next player")
+            Tile::Empty => panic!("Empty tile does not have a next player"),
         }
     }
 }
@@ -93,21 +105,21 @@ mod tests {
 
     #[test]
     fn constructor() {
-        let board= Board::new();
+        let board = Board::new();
         assert_eq!(board.tiles, [Tile::Empty; 9]);
     }
     #[test]
     #[should_panic]
     fn bad_set() {
-        let mut board= Board::new();
-        board.set(9,Tile::Cross);
+        let mut board = Board::new();
+        board.set(9, Tile::Cross);
     }
     #[test]
     fn set() {
-        let mut board= Board::new();
-        board.set(8,Tile::Cross);
+        let mut board = Board::new();
+        board.set(8, Tile::Cross);
         assert_eq!(board.tiles[8], Tile::Cross);
-        board.set(7,Tile::Circle);
+        board.set(7, Tile::Circle);
         assert_eq!(board.tiles[7], Tile::Circle);
     }
     #[test]
@@ -128,7 +140,10 @@ mod tests {
             for pos in line {
                 board.set(pos, Tile::Cross);
             }
-            assert!(board.check_win(Tile::Cross), "expected win for line {line:?}");
+            assert!(
+                board.check_win(Tile::Cross),
+                "expected win for line {line:?}"
+            );
             assert!(!board.check_win(Tile::Circle));
         }
 
@@ -137,12 +152,12 @@ mod tests {
         assert!(!board.check_win(Tile::Circle));
     }
     #[test]
-    fn check_empty_tile(){
+    fn check_empty_tile() {
         let board = Board::new();
         assert!(board.check_empty_tile(0));
     }
     #[test]
-    fn check_full_board(){
+    fn check_full_board() {
         let mut board = Board::new();
         assert!(!board.check_full_board());
         for i in 0..9 {
