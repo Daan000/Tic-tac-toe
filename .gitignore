@@ -1,1 +1,7 @@
+# Cargo en Rust
 /target
+**/*.rs.bk
+
+# RustRover / JetBrains IDEs
+/.idea/
+*.iml
