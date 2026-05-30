@@ -63,6 +63,11 @@ impl Board {
         }
     }
 }
+impl Default for Board {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl Tile {
     pub fn next_player(&self) -> Tile {
         match self {
