@@ -10,9 +10,9 @@ pub struct Board {
     tiles: [Tile; 9],
 }
 impl Board {
-    pub fn new() -> Board {
+    pub fn new(tiles: [Tile; 9]) -> Board {
         Board {
-            tiles: [Tile::Empty; 9],
+            tiles,
         }
     }
 
@@ -77,7 +77,7 @@ impl Board {
 }
 impl Default for Board {
     fn default() -> Self {
-        Self::new()
+        Self::new([Tile::Empty; 9])
     }
 }
 impl Tile {
@@ -105,18 +105,18 @@ mod tests {
 
     #[test]
     fn constructor() {
-        let board = Board::new();
+        let board = Board::default();
         assert_eq!(board.tiles, [Tile::Empty; 9]);
     }
     #[test]
     #[should_panic]
     fn bad_set() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set(9, Tile::Cross);
     }
     #[test]
     fn set() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         board.set(8, Tile::Cross);
         assert_eq!(board.tiles[8], Tile::Cross);
         board.set(7, Tile::Circle);
@@ -136,7 +136,7 @@ mod tests {
         ];
 
         for line in winning_lines {
-            let mut board = Board::new();
+            let mut board = Board::default();
             for pos in line {
                 board.set(pos, Tile::Cross);
             }
@@ -147,22 +147,29 @@ mod tests {
             assert!(!board.check_win(Tile::Circle));
         }
 
-        let board = Board::new();
+        let board = Board::default();
         assert!(!board.check_win(Tile::Cross));
         assert!(!board.check_win(Tile::Circle));
     }
     #[test]
     fn check_empty_tile() {
-        let board = Board::new();
+        let board = Board::default();
         assert!(board.check_empty_tile(0));
     }
     #[test]
     fn check_full_board() {
-        let mut board = Board::new();
+        let mut board = Board::default();
         assert!(!board.check_full_board());
         for i in 0..9 {
             board.set(i, Tile::Circle);
         }
         assert!(board.check_full_board());
+    }
+    #[test]
+    fn get_board() {
+        let board = Board::default();
+        let mut b = board.get_board();
+        b[0] = Tile::Cross;
+        assert_eq!(board.tiles[0], Tile::Empty);
     }
 }

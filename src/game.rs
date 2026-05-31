@@ -14,12 +14,12 @@ pub struct Game {
     status: GameStatus,
 }
 impl Game {
-    pub fn new(start_tile: Tile) -> Game {
+    pub fn new(board: Board, start_tile: Tile) -> Game {
         if matches!(start_tile, Tile::Empty) {
             panic!("start_tile cannot be Empty")
         }
         Game {
-            board: Board::new(),
+            board,
             current_turn: start_tile,
             status: GameStatus::Ongoing,
         }
@@ -53,6 +53,11 @@ impl Game {
         self.board.print_grid()
     }
 }
+impl Default for Game {
+    fn default() -> Self {
+        Self::new(Board::default(), Tile::Cross)
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -60,18 +65,18 @@ mod tests {
     #[test]
     #[should_panic]
     fn bad_constructor() {
-        let _game = Game::new(Tile::Empty);
+        let _game = Game::default();
     }
     #[test]
     fn constructor() {
-        let game = Game::new(Tile::Cross);
+        let game = Game::default();
         assert_eq!(game.current_turn, Tile::Cross);
         assert_eq!(game.status(), GameStatus::Ongoing);
         assert_eq!(game.board.get_board(), [Tile::Empty; 9]);
     }
     #[test]
     fn make_move_basic() {
-        let mut game = Game::new(Tile::Cross);
+        let mut game = Game::default();
         assert_eq!(game.current_turn, Tile::Cross);
         game.make_move(0);
         assert_eq!(game.current_turn, Tile::Circle);
@@ -83,7 +88,7 @@ mod tests {
     }
     #[test]
     fn make_move_win() {
-        let mut game = Game::new(Tile::Cross);
+        let mut game = Game::default();
         // x o o
         // x - -
         // x - -
@@ -96,7 +101,7 @@ mod tests {
     }
     #[test]
     fn make_move_draw() {
-        let mut game = Game::new(Tile::Cross);
+        let mut game = Game::default();
         // x o x
         // x o o
         // o x x
@@ -113,17 +118,17 @@ mod tests {
     }
     #[test]
     fn status() {
-        let game = Game::new(Tile::Cross);
+        let game = Game::default();
         assert_eq!(game.status(), GameStatus::Ongoing);
     }
     #[test]
     fn current_turn() {
-        let game = Game::new(Tile::Cross);
+        let game = Game::default();
         assert_eq!(game.current_turn(), Tile::Cross);
     }
     #[test]
     fn get_board() {
-        let game = Game::new(Tile::Cross);
+        let game = Game::default();
         assert_eq!(game.get_board().get_board(), [Tile::Empty; 9]);
     }
 }
