@@ -1,13 +1,13 @@
 use std::io;
 use std::io::Write;
 
-use tic_tac_toe::{Game, GameStatus, Opponent, SimpleOpponent,RandomOpponent};
+use tic_tac_toe::{Game, GameStatus, Opponent, RandomOpponent, SimpleOpponent};
 
 fn main() {
     let mut game = Game::default();
     //let opp = SimpleOpponent;
     let opp = RandomOpponent;
-    
+
     println!("Welcome to Tic Tac Toe!");
     println!("You are playing against {}", opp.get_description());
 
@@ -32,6 +32,11 @@ fn main() {
 
         if coords.len() != 2 || coords[0] > 2 || coords[1] > 2 {
             println!("Faulty input. Enter 2 numbers (0 or 1 or 2) separated by a space.");
+            continue;
+        }
+
+        if !game.legal_move(coords[0] * 3 + coords[1]) {
+            println!("Illegal move. Try again.");
             continue;
         }
 

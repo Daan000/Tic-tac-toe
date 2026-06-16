@@ -38,7 +38,9 @@ impl Game {
         if pos > 8 {
             panic!("pos larger than 8")
         }
-
+        if !self.board.check_empty_tile(pos) {
+            panic!("pos is not empty")
+        }
         self.board.set(pos, self.current_turn);
         if self.board.check_win(self.current_turn) {
             self.status = GameStatus::Won(self.current_turn);
@@ -47,6 +49,9 @@ impl Game {
         } else {
             self.current_turn = self.current_turn.next_player();
         }
+    }
+    pub fn legal_move(&self, pos: usize) -> bool {
+        pos < 9 && self.board.check_empty_tile(pos)
     }
     pub fn status(&self) -> GameStatus {
         self.status

@@ -49,7 +49,7 @@ impl Board {
         if pos > 8 {
             panic!("pos greater then 8")
         }
-        self.tiles[pos] == Tile::Empty
+        matches!(self.tiles[pos], Tile::Empty)
     }
     pub fn check_full_board(&self) -> bool {
         self.tiles
