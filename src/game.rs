@@ -18,10 +18,19 @@ impl Game {
         if matches!(start_tile, Tile::Empty) {
             panic!("start_tile cannot be Empty")
         }
+        let status = if board.check_win(start_tile) {
+            GameStatus::Won(start_tile)
+        } else if board.check_win(start_tile.next_player()) {
+            GameStatus::Won(start_tile.next_player())
+        } else if board.check_full_board() {
+            GameStatus::Draw
+        } else {
+            GameStatus::Ongoing
+        };
         Game {
             board,
             current_turn: start_tile,
-            status: GameStatus::Ongoing,
+            status,
         }
     }
 
@@ -65,7 +74,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn bad_constructor() {
-        let _game = Game::default();
+        let _game = Game::new(Board::default(), Tile::Empty);
     }
     #[test]
     fn constructor() {

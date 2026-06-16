@@ -1,13 +1,13 @@
 use std::io;
 use std::io::Write;
 
-use tic_tac_toe::{Game, GameStatus, Opponent, SimpleOpponent, Tile};
+use tic_tac_toe::{Game, GameStatus, Opponent, SimpleOpponent,RandomOpponent};
 
 fn main() {
-    //gemini bullshit loop
-    let mut game = Game::new(Tile::Cross);
-    let opp = SimpleOpponent;
-
+    let mut game = Game::default();
+    //let opp = SimpleOpponent;
+    let opp = RandomOpponent;
+    
     println!("Welcome to Tic Tac Toe!");
     println!("You are playing against {}", opp.get_description());
 

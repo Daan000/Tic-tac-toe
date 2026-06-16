@@ -11,9 +11,7 @@ pub struct Board {
 }
 impl Board {
     pub fn new(tiles: [Tile; 9]) -> Board {
-        Board {
-            tiles,
-        }
+        Board { tiles }
     }
 
     pub fn set(&mut self, pos: usize, t: Tile) {
